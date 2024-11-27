@@ -25,9 +25,6 @@ def unicodeToAscii(s):
     )
 
 
-print(unicodeToAscii('Ślusàrski'))
-
-
 # Read a file and split into lines
 
 
@@ -80,7 +77,7 @@ def load_random_example(category_lines, all_categories):
     # i return the categorie and the word also
     line_tensor = lineToTensor(line)
     category_tensor = torch.tensor(
-        all_categories.index(country), dtype=torch.long)
+        [all_categories.index(country)], dtype=torch.long)
 
     return line_tensor, category_tensor, country, line
     # categories line already loaded we don't need to load it again
@@ -90,4 +87,3 @@ if __name__ == "__main__":
     cl, c = load_data()
 
     oneexample = print(load_random_example(cl, c))
-    print(oneexample)
