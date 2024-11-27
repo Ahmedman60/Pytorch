@@ -74,7 +74,7 @@ def category_from_output(output):
 
 
 criterion = nn.NLLLoss()
-learning_rate = 0.01
+learning_rate = 0.001
 optimizer = torch.optim.SGD(rnn.parameters(), lr=learning_rate)
 
 # for a name
@@ -84,7 +84,8 @@ def train(line_tensor, category_tensor):
     hidden = rnn.initHidden()
     for i in range(line_tensor.size()[0]):
         output, hidden = rnn(line_tensor[i], hidden)
-    loss = criterion(output, category_tensor)
+    # Add epsilon to prevent log(0)
+    loss = criterion(output + 1e-10, category_tensor)
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
