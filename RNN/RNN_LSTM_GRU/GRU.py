@@ -40,8 +40,8 @@ class RNN(nn.Module):
         self.direction = direction
         # hidden_size are the numbers of Nodes in each layer
         # Batchsize,sequencesize,featues
-        self.rnn = nn.LSTM(input_size, hidden_size,
-                           num_layers, batch_first=True, bidirectional=(self.direction == 2))
+        self.rnn = nn.GRU(input_size, hidden_size,
+                          num_layers, batch_first=True, bidirectional=(self.direction == 2))
         # i have modified the code to include bidirection using one variable to control my direction. if direction=1  it will be false
         # you just pass the input size and you can pass any sequence lenghth all sequences here have same amout 28
         self.linear = nn.Linear(hidden_size, num_classes)
@@ -51,12 +51,10 @@ class RNN(nn.Module):
         # set initial hidden and cell states
         h0 = torch.zeros(self.num_layers*self.direction, x.size(0),
                          self.hidden_size).to(device)  # since we have one direction num_layer only
-        c0 = torch.zeros(self.num_layers*self.direction, x.size(0),
-                         self.hidden_size).to(device)
 
         # out: tensor of shape (batch_size, seq_length, hidden_size)  #x should be in shape batch,seq,featues
         # the _ is the hidden state here i don't use it or store it.
-        out, _ = self.rnn(x, (h0, c0))  # from document it take x and h0
+        out, _ = self.rnn(x, h0)  # from document it take x and h0
         # Decode the hidden state of the last time step
         # the output will be in (Batch,sequence,hiddensize)
         # (N,28,256)
@@ -190,7 +188,3 @@ display_and_predict_example(
     model, test_dataset, device, sequence_lenght, input_size, classes)
 
 # https: // pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial
-# https://www.youtube.com/watch?v=0_PgWWmauHk&t=239s&ab_channel=PatrickLoeber
-
-
-# LSTM was best one
