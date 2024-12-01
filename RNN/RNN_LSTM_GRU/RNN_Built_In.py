@@ -15,7 +15,7 @@ learning_rate = 0.001
 num_classes = 10
 batch_size = 64
 num_epochs = 2
-
+direction = 1
 # MNIST
 train_dataset = torchvision.datasets.MNIST(
     root='./data', train=True, transform=transforms.ToTensor(), download=True)
@@ -30,20 +30,23 @@ test_loader = torch.utils.data.DataLoader(
 
 
 class RNN(nn.Module):
-    def __init__(self, input_size, hidden_size, num_layers, num_classes):
+    def __init__(self, input_size, hidden_size, num_layers, direction, num_classes):
         super(RNN, self).__init__()
         self.hidden_size = hidden_size
         self.num_layers = num_layers
+        self.direction = direction
         # hidden_size are the numbers of Nodes in each layer
         # Batchsize,sequencesize,featues
         self.rnn = nn.RNN(input_size, hidden_size,
-                          num_layers, batch_first=True)  # you just pass the input size and you can pass any sequence lenghth all sequences here have same amout 28
+                          num_layers, batch_first=True, bidirectional=(self.direction == 2))
+        # i have modified the code to include bidirection using one variable to control my direction. if direction=1  it will be false
+        # you just pass the input size and you can pass any sequence lenghth all sequences here have same amout 28
         self.linear = nn.Linear(hidden_size, num_classes)
         self.softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, x):
         # set initial hidden and cell states
-        h0 = torch.zeros(self.num_layers, x.size(0),
+        h0 = torch.zeros(self.num_layers*self.direction, x.size(0),
                          self.hidden_size).to(device)  # since we have one direction num_layer only
 
         # out: tensor of shape (batch_size, seq_length, hidden_size)  #x should be in shape batch,seq,featues
@@ -115,3 +118,4 @@ Train(device, input_size, sequence_lenght, num_epochs,
       train_loader, model, criterion, optimizer)
 
 # Evaluation(device, input_size, sequence_lenght, test_loader, model)
+# https: // pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial
