@@ -8,6 +8,8 @@ import torchvision.transforms as transforms
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Hyperparameters  (we think of Nx1x28x28  as 28 sequence each with 28 features)
+
+classes = [str(i) for i in range(10)]
 input_size = 28
 sequence_lenght = 28
 num_layers = 2
@@ -172,13 +174,17 @@ def display_and_predict_example(model, dataset, device, sequence_length, input_s
     print(f"Predicted Class: {predicted_label}")
 
 
+# Train
 losess = Train(device, input_size, sequence_lenght, num_epochs,
                train_loader, model, criterion, optimizer)
 plot_losses(losess)
-# Evaluation(device, input_size, sequence_lenght, test_loader, model)
-# https: // pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial
-# Define the classes for MNIST
-classes = [str(i) for i in range(10)]
+
+# Test
+Evaluation(device, input_size, sequence_lenght, test_loader, model)
+
+
 # Use the function with the test dataset
 display_and_predict_example(
     model, test_dataset, device, sequence_lenght, input_size, classes)
+
+# https: // pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial
