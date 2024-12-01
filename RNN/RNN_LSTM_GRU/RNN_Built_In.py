@@ -65,7 +65,8 @@ class RNN(nn.Module):
 
 # we you call the object of RNN it automatically call forward function so remember this.
 # creating object is a thing and calling the object is another thing.
-model = RNN(input_size, hidden_size, num_layers, num_classes).to(device)
+model = RNN(input_size, hidden_size, num_layers,
+            direction, num_classes).to(device)
 criterion = nn.NLLLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
