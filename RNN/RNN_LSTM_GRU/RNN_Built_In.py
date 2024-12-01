@@ -66,40 +66,52 @@ model = RNN(input_size, hidden_size, num_layers, num_classes).to(device)
 criterion = nn.NLLLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-for epoch in range(num_epochs):
-    for i, (images, labels) in enumerate(train_loader):
-        # origin shape: [N, 1, 28, 28]
-        # resized shape: [N, 28, 28]
-        images = images.reshape(-1, sequence_lenght, input_size).to(device)
-        labels = labels.to(device)
+
+def Train(device, input_size, sequence_lenght, num_epochs, train_loader, model, criterion, optimizer):
+    for epoch in range(num_epochs):
+        for i, (images, labels) in enumerate(train_loader):
+            # origin shape: [N, 1, 28, 28]
+            # resized shape: [N, 28, 28]
+            images = images.reshape(-1, sequence_lenght, input_size).to(device)
+            labels = labels.to(device)
 
         # Forward pass
-        outputs = model(images)
-        loss = criterion(outputs, labels)
+            outputs = model(images)
+            loss = criterion(outputs, labels)
 
         # Backward and optimize
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
 
-        if (i+1) % 100 == 0:
-            print(
-                f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{len(train_loader)}], Loss: {loss.item():.4f}')
+            if (i+1) % 100 == 0:
+                print(
+                    f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{len(train_loader)}], Loss: {loss.item():.4f}')
+
 
 # print(f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{len(train_loader)}], Loss: {loss.item():.4f}')
 
-with torch.no_grad():
-    n_correct = 0
-    n_samples = 0
-    for images, labels in test_loader:
-        images = images.reshape(-1, sequence_lenght, input_size).to(device)
-        labels = labels.to(device)
-        outputs = model(images)
-        # max returns (value ,index)
-        _, predicted = torch.max(outputs.data, 1)
-        n_samples += labels.size(0)
-        n_correct += (predicted == labels).sum().item()
+# Evaluation Loop
 
-    acc = 100.0 * n_correct / n_samples
-    print(f'Accuracy of the network on the 10000 test images: {acc} %')
-    torch.save(model.state_dict(), 'model.ckpt')
+def Evaluation(device, input_size, sequence_lenght, test_loader, model):
+    with torch.no_grad():
+        n_correct = 0
+        n_samples = 0
+        for images, labels in test_loader:
+            images = images.reshape(-1, sequence_lenght, input_size).to(device)
+            labels = labels.to(device)
+            outputs = model(images)
+        # max returns (value ,index)
+            _, predicted = torch.max(outputs.data, 1)
+            n_samples += labels.size(0)
+            n_correct += (predicted == labels).sum().item()
+
+        acc = 100.0 * n_correct / n_samples
+        print(f'Accuracy of the network on the 10000 test images: {acc} %')
+        torch.save(model.state_dict(), 'model.ckpt')
+
+
+Train(device, input_size, sequence_lenght, num_epochs,
+      train_loader, model, criterion, optimizer)
+
+# Evaluation(device, input_size, sequence_lenght, test_loader, model)
