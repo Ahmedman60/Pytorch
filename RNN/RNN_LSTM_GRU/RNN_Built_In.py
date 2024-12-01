@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import torchvision
@@ -72,8 +73,11 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
 
 def Train(device, input_size, sequence_lenght, num_epochs, train_loader, model, criterion, optimizer):
+    all_losses = []
     for epoch in range(num_epochs):
+        epoch_losses = []
         for i, (images, labels) in enumerate(train_loader):
+
             # origin shape: [N, 1, 28, 28]
             # resized shape: [N, 28, 28]
             images = images.reshape(-1, sequence_lenght, input_size).to(device)
@@ -82,7 +86,7 @@ def Train(device, input_size, sequence_lenght, num_epochs, train_loader, model, 
         # Forward pass
             outputs = model(images)
             loss = criterion(outputs, labels)
-
+            epoch_losses.append(loss.item())  # loss of each sequence
         # Backward and optimize
             optimizer.zero_grad()
             loss.backward()
@@ -92,10 +96,12 @@ def Train(device, input_size, sequence_lenght, num_epochs, train_loader, model, 
                 print(
                     f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{len(train_loader)}], Loss: {loss.item():.4f}')
 
-
+        all_losses.extend(epoch_losses)
+    return all_losses
 # print(f'Epoch [{epoch+1}/{num_epochs}], Step [{i+1}/{len(train_loader)}], Loss: {loss.item():.4f}')
 
 # Evaluation Loop
+
 
 def Evaluation(device, input_size, sequence_lenght, test_loader, model):
     with torch.no_grad():
@@ -115,8 +121,64 @@ def Evaluation(device, input_size, sequence_lenght, test_loader, model):
         torch.save(model.state_dict(), 'model.ckpt')
 
 
-Train(device, input_size, sequence_lenght, num_epochs,
-      train_loader, model, criterion, optimizer)
+def plot_losses(losses):
+    """
+    Plot the training losses over batches.
+    """
+    plt.figure(figsize=(10, 5))
+    plt.plot(losses, label="Training Loss")
+    plt.xlabel("Batch Number")
+    plt.ylabel("Loss")
+    plt.title("Training Loss over Time")
+    plt.legend()
+    plt.grid()
+    plt.show()
 
+
+def display_and_predict_example(model, dataset, device, sequence_length, input_size, classes):
+    """
+    Display an example image and predict its class.
+
+    Args:
+        model: The trained RNN model.
+        dataset: The dataset from which to sample an image.
+        device: The device (CPU or GPU) on which the model is running.
+        sequence_length: The sequence length of the input (28 for MNIST).
+        input_size: The input size of the RNN (28 for MNIST).
+        classes: List of class names (digits 0-9 for MNIST).
+    """
+    # Set model to evaluation mode
+    model.eval()  # no need for it i don't have dropout but incase..
+
+    # Randomly select an image and its label
+    index = torch.randint(len(dataset), (1,)).item()
+    image, label = dataset[index]
+
+    # Display the image
+    plt.imshow(image.squeeze(), cmap="gray")
+    plt.title(f"True Label: {classes[label]}")
+    plt.axis("off")
+    plt.show()
+
+    # Prepare the image for the model
+    image = image.reshape(1, sequence_length, input_size).to(device)
+
+    # Predict the class
+    with torch.no_grad():
+        outputs = model(image)
+        _, predicted = torch.max(outputs.data, 1)
+        predicted_label = classes[predicted.item()]
+
+    print(f"Predicted Class: {predicted_label}")
+
+
+losess = Train(device, input_size, sequence_lenght, num_epochs,
+               train_loader, model, criterion, optimizer)
+plot_losses(losess)
 # Evaluation(device, input_size, sequence_lenght, test_loader, model)
 # https: // pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial
+# Define the classes for MNIST
+classes = [str(i) for i in range(10)]
+# Use the function with the test dataset
+display_and_predict_example(
+    model, test_dataset, device, sequence_lenght, input_size, classes)
