@@ -122,7 +122,8 @@ def Evaluation(device, input_size, sequence_lenght, test_loader, model):
 
         acc = 100.0 * n_correct / n_samples
         print(f'Accuracy of the network on the 10000 test images: {acc} %')
-        torch.save(model.state_dict(), 'model.ckpt')
+        torch.save(model.state_dict(), "model.pt")
+        print("Done!")
 
 
 def plot_losses(losses):
@@ -177,9 +178,9 @@ def display_and_predict_example(model, dataset, device, sequence_length, input_s
 
 
 # Train
-losess = Train(device, input_size, sequence_lenght, num_epochs,
-               train_loader, model, criterion, optimizer)
-plot_losses(losess)
+# losess = Train(device, input_size, sequence_lenght, num_epochs,
+#                train_loader, model, criterion, optimizer)
+# plot_losses(losess)
 
 # Test
 Evaluation(device, input_size, sequence_lenght, test_loader, model)
@@ -194,5 +195,3 @@ display_and_predict_example(
 
 
 # LSTM was best one
-
-Evaluation()
