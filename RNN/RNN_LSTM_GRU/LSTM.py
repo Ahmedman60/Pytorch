@@ -194,3 +194,5 @@ display_and_predict_example(
 
 
 # LSTM was best one
+
+Evaluation()
