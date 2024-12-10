@@ -28,3 +28,7 @@ english = Field(sequential=True, use_vocab=True,
                 tokenize=tokenize_eng, lower=True)
 german = Field(sequential=True, use_vocab=True,
                tokenize=tokenize_ger, lower=True)
+
+
+train_data, valid_data, test_data = Multi30k.splits(
+    exts=('.de', '.en'), fields=(german, english))
