@@ -2,11 +2,18 @@
 import torch
 from torchtext.data import Field, TabularDataset, BucketIterator
 import torch.nn as nn
-
+import spacy as sp
 # Tokenization function
 
 
-def tokenize(x): return x.split()
+# def tokenize(x): return x.split()
+
+
+sp_en = sp.load("en_core_web_sm")
+
+
+def tokenize(x):
+    return [tok.text for tok in sp_en.tokenizer(x)]
 
 
 # Define Fields for processing
