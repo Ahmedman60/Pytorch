@@ -11,7 +11,9 @@ def Bound_Uniform_Random(v, p, r, min, max):
     # we need to add randomness of sign  i don't use R here i use it inside.
     r = noise_Vector/2
     # we have the randomness
+    # 0 to 1  then 0  2 only then subtract 1 to make it -1 to 1   then multiple my r
     noise = (r*(2*torch.randint(2, size=(1, len(v)))-1))
+    # to make it -r to r like we divide the -1 by 2 and the 1 by 2 also  because r is 0.5
     vector = torch.where(mask, noise+v, v)
     vector = torch.clamp(vector, min=min, max=max)
     return vector
