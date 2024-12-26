@@ -21,10 +21,14 @@ def gaussian_convolution(vector, p=1.0, variance=1.0, min_val=-float('inf'), max
     # Process each element in the vector
     for i in range(len(v)):
         # Check if we should add noise to this element
+        # this will always add noise to the element because p is 1.0.
+        # if we decrease the probability of adding noise to the element, we can control the amount of noise added to the element.
+        # if p is 0.5, then there is 50% chance of adding noise to the element.
         if np.random.random() < p:
             # Keep generating noise until we get a value within bounds
             while True:
                 # Generate random noise from Normal(0, variance)
+                # the norml takes means and std   std is np.sqrt(variance)
                 n = np.random.normal(0, np.sqrt(variance))
                 # Check if adding the noise keeps us within bounds
                 if min_val <= v[i] + n <= max_val:
