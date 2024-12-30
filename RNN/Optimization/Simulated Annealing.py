@@ -69,15 +69,19 @@ ax.plot_surface(x_mesh, y_mesh, z_vals, cmap='viridis', alpha=0.6)
 scat = ax.scatter([], [], [], color='red', s=50)
 
 
+# Update function for animation (It creates lots of frames, so it may take a while to render)
 def update(frame):
     if frame < len(history):
+        # Update the scatter plot's position
         x, y, z = history[frame]
+        # Update the scatter plot's position
         scat._offsets3d = ([x], [y], [z])
     return scat,
 
 
+# Create animation
 ani = FuncAnimation(fig, update, frames=len(history), interval=50, blit=False)
 
 # Save and display animation
-ani.save('/mnt/data/simulated_annealing_optimization.gif', writer='pillow')
+ani.save('simulated_annealing_optimization.gif', writer='pillow')
 plt.show()
