@@ -28,8 +28,20 @@ def tweak(solution, step_size=0.5):
 
 # Tabu Search implementation
 def tabu_search(max_iter=100, tabu_list_size=5, num_tweaks=10):
+    """
+    Performs Tabu Search optimization using the Rastrigin function.
+
+    Parameters:
+        max_iter (int): Maximum number of iterations.
+        tabu_list_size (int): Maximum size of the Tabu list.
+        num_tweaks (int): Number of candidate solutions to generate per iteration.
+
+    Returns:
+        best_solution (np.ndarray): The best solution found.
+        solutions_history (list): History of solutions for visualization.
+        best_history (list): History of the best solutions for visualization.
+    """
     # Initialize variables
-    # The function takes only  x and y values
     current_solution = np.random.uniform(-5.12, 5.12, size=2)
     best_solution = current_solution.copy()
 
@@ -40,10 +52,9 @@ def tabu_search(max_iter=100, tabu_list_size=5, num_tweaks=10):
     best_history = []
 
     for _ in range(max_iter):
-        # Add the current solution to the Tabu list and remove it from the list if it exceeds the maximum size (tabu_list_size).
+        # Add the current solution to the Tabu list
         if len(tabu_list) >= tabu_list_size:
             tabu_list.pop(0)
-        # tolist  convert  array([ 4.92698887, -2.5134489 ]) which is output of random to [ 4.92698887, -2.5134489 ]
         tabu_list.append(current_solution.tolist())
 
         # Generate candidates and evaluate them
@@ -52,10 +63,8 @@ def tabu_search(max_iter=100, tabu_list_size=5, num_tweaks=10):
         for _ in range(num_tweaks):
             candidate = tweak(current_solution)
             if candidate.tolist() not in tabu_list:
-                # This is the quality of the candidate
                 candidate_value = rastrigin(candidate[0], candidate[1])
-                if (candidate_value < min_value):
-                    # R<W
+                if candidate_value < min_value:
                     min_value = candidate_value
                     best_candidate = candidate
 
