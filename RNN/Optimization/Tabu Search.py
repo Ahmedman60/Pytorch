@@ -81,3 +81,73 @@ def tabu_search(max_iter=100, tabu_list_size=5, num_tweaks=10):
         best_history.append(best_solution)
 
     return best_solution, solutions_history, best_history
+
+
+# Run Tabu Search
+best_solution, solutions_history, best_history = tabu_search()
+
+# # Visualize the Rastrigin function and optimization process
+# x = np.linspace(-5.12, 5.12, 400)
+# y = np.linspace(-5.12, 5.12, 400)
+# x, y = np.meshgrid(x, y)
+# z = rastrigin(x, y)
+
+# fig = plt.figure(figsize=(12, 8))
+# ax = fig.add_subplot(111, projection='3d')
+# ax.plot_surface(x, y, z, cmap='viridis', alpha=0.8)
+
+# # Plot the optimization path
+# solutions_history = np.array(solutions_history)
+# ax.plot(solutions_history[:, 0], solutions_history[:, 1], [rastrigin(
+#     p[0], p[1]) for p in solutions_history], color='red', marker='o')
+
+# # Highlight the best solution
+# ax.scatter(best_solution[0], best_solution[1], rastrigin(
+#     best_solution[0], best_solution[1]), color='blue', s=100, label='Best Solution')
+
+# ax.set_title('Tabu Search Optimization on Rastrigin Function')
+# ax.set_xlabel('X')
+# ax.set_ylabel('Y')
+# ax.set_zlabel('Rastrigin Value')
+# plt.legend()
+# plt.show()
+
+# print("Best solution:", best_solution)
+# print("Best value:", rastrigin(best_solution[0], best_solution[1]))
+
+
+# plt.plot(best_history[0], rastrigin(
+#     best_history[0], best_history[1]), '-o', color='blue')
+# plt.xlabel('Iteration')
+# plt.ylabel('Best Value')
+
+# plt.show()
+
+
+# # Plot Rastrigin values over iterations (x-axis)  --Not so informative
+# plt.figure(figsize=(10, 6))
+# x_values = [s[0] for s in solutions_history]
+# rastrigin_values = [rastrigin(s[0], s[1]) for s in solutions_history]
+# plt.plot(x_values, rastrigin_values, marker='o', color='purple')
+# plt.title('Rastrigin Function Value vs X Over Iterations')
+# plt.xlabel('X Value')
+# plt.ylabel('Rastrigin Value')
+# plt.grid()
+# plt.show()
+
+# print("Best solution:", best_solution)
+# print("Best value:", rastrigin(best_solution[0], best_solution[1]))
+
+# Plot Rastrigin values over iterations (iterations on x-axis)
+plt.figure(figsize=(10, 6))
+iterations = range(len(solutions_history))
+rastrigin_values = [rastrigin(s[0], s[1]) for s in solutions_history]
+plt.plot(iterations, rastrigin_values, marker='o', color='green')
+plt.title('Rastrigin Function Value vs Iterations')
+plt.xlabel('Iteration')
+plt.ylabel('Rastrigin Value')
+plt.grid()
+plt.show()
+
+print("Best solution:", best_solution)
+print("Best value:", rastrigin(best_solution[0], best_solution[1]))
