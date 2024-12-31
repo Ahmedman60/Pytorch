@@ -1,17 +1,31 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 # Define the distance function for TSP
+# This code explained and tested by mohamed Fathallah
 
 
 def calculate_distance(path, distance_matrix):
-    return sum(distance_matrix[path[i - 1], path[i]] for i in range(len(path)))
+    '''
+    A A B C D E
+    B A B C D E
+    C A B C D E
+    D A B C D E
+    E A B C D E
+    Path: 0, 2, 1, 3 (representing cities A→C→B→D)
+    distance[3][0]  [D,A] = 10
+    distance[0][2] [A,C] = 9
+    #This is how it works with the distance matrix
+    '''
+    return np.sum([distance_matrix[path[i - 1], path[i]] for i in range(len(path))])
 
 # Define the tweak function to generate a new candidate solution for TSP
 
 
 def tweak_tsp(solution):
     new_solution = solution.copy()
+    # Swap two random cities in the solution
     i, j = np.random.choice(len(solution), 2, replace=False)
     new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
     return new_solution
@@ -69,6 +83,17 @@ distance_matrix = np.array([
     [10, 4, 8, 0, 6],
     [7, 3, 5, 6, 0]
 ])
+'''
+A A B C D E
+B A B C D E
+C A B C D E
+D A B C D E
+E A B C D E
+Path: 0, 2, 1, 3 (representing cities A→C→B→D)
+distance[3][0]  [D,A] = 10
+distance[0][2] [A,C] = 9
+#This is how it works with the distance matrix
+'''
 
 # Run Tabu Search for TSP
 best_solution, solutions_history, best_history = tabu_search_tsp(
@@ -80,24 +105,45 @@ node_coordinates = np.array([
     [0, 0], [2, 2], [9, 0], [10, 10], [7, 5]
 ])
 
-plt.figure(figsize=(10, 6))
-for solution in solutions_history:
-    path = np.array(node_coordinates[solution + [solution[0]]])
-    plt.plot(path[:, 0], path[:, 1], alpha=0.3, linestyle='--', color='gray')
+fig, ax = plt.subplots(figsize=(10, 6))
 
-# Plot best solution
-best_path = np.array(node_coordinates[best_solution + [best_solution[0]]])
-plt.plot(best_path[:, 0], best_path[:, 1],
-         marker='o', color='blue', label='Best Path')
+# Initialize the plot
 
-for i, coord in enumerate(node_coordinates):
-    plt.text(coord[0], coord[1], f'Node {i}', fontsize=12, color='red')
 
-plt.title('TSP Solution Using Tabu Search')
-plt.xlabel('X Coordinate')
-plt.ylabel('Y Coordinate')
-plt.legend()
-plt.grid()
+def init():
+    ax.clear()
+    ax.set_title('TSP Solution Using Tabu Search')
+    ax.set_xlabel('X Coordinate')
+    ax.set_ylabel('Y Coordinate')
+    for i, coord in enumerate(node_coordinates):
+        ax.text(coord[0], coord[1], f'Node {i}', fontsize=12, color='red')
+    ax.grid()
+
+# Update the plot for each frame
+
+
+def update(frame):
+    ax.clear()
+    path = np.array(
+        node_coordinates[solutions_history[frame] + [solutions_history[frame][0]]])
+    ax.plot(path[:, 0], path[:, 1], alpha=0.7, linestyle='--',
+            color='gray', label='Current Path')
+    best_path = np.array(
+        node_coordinates[best_history[frame] + [best_history[frame][0]]])
+    ax.plot(best_path[:, 0], best_path[:, 1],
+            marker='o', color='blue', label='Best Path')
+    for i, coord in enumerate(node_coordinates):
+        ax.text(coord[0], coord[1], f'Node {i}', fontsize=12, color='red')
+    ax.legend()
+    ax.grid()
+
+
+ani = FuncAnimation(fig, update, frames=len(
+    solutions_history), init_func=init, repeat=False)
+
+# Save as GIF
+ani.save('tsp_tabu_search.gif', writer='imagemagick', fps=2)
+
 plt.show()
 
 print("Best solution:", best_solution)
