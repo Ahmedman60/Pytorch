@@ -1,0 +1,31 @@
+# TODO: Train the network here   make the len(trainloader) inside the for loop in the bad code and outside in the good code.
+num_epoch=5
+total_steps=len(trainloader)
+Losses = []
+n_correct = 0
+n_samples = 0
+
+for i in num_epoch:
+    
+    for idx,(data,label) in enumerate(trainloader):
+        #Forward pass
+        logs_real=model(data)
+        loss=criterion(logs_real,label)
+        #start the backward propagation
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+        
+        print(f"Epoch {i+1}/{num_epoch},Step [{idx/total_steps}] Training Loss: {loss.item():.4f}")
+        Losses.append(loss.item())
+        
+    else:
+        print(f"Training loss: {running_loss/len(trainloader)}")
+        print(f"Accuracy)
+
+
+
+
+Use float32  in the model 1
+
+in your model uses bfloat16  it will speed the process a little. and make quatization in number of memory needed.
