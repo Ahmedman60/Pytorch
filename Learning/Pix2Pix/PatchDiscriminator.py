@@ -18,6 +18,7 @@ class PatchDiscriminator(nn.Module):
         self.batch_norm4 = nn.BatchNorm2d(512)
         self.leaky_relu4 = nn.LeakyReLU(0.2, inplace=True)
         self.final_conv = nn.Conv2d(512, 1, kernel_size=4, stride=1, padding=1)
+        self.last = nn.Conv2d(1, 1, kernel_size=4, stride=1, padding=2)
         self.sigmoid = nn.Sigmoid()
 
     def forward(self, x):
@@ -30,8 +31,12 @@ class PatchDiscriminator(nn.Module):
         print("After Conv3:", x.shape)
         x = self.leaky_relu4(self.batch_norm4(self.conv4(x)))
         print("After Conv4:", x.shape)
-        x = self.sigmoid(self.final_conv(x))
+        x = self.final_conv(x)
         print("After Final Conv:", x.shape)
+        x = self.last(x)
+        print("After Last Conv:", x.shape)
+        x = self.sigmoid(x)
+        print("After Final Final Conv:", x.shape)
         return x
 
 
