@@ -55,7 +55,7 @@ output = model(input_tensor)
 
 summary(model, input_size=(3, 256, 256))
 
-# Create the visualization graph
-dot = make_dot(output, params=dict(model.named_parameters()))
-dot.format = 'png'  # Save the graph as a PNG file
-dot.render('patch_discriminator_graph')
+# # Create the visualization graph
+# dot = make_dot(output, params=dict(model.named_parameters()))
+# dot.format = 'png'  # Save the graph as a PNG file
+# dot.render('patch_discriminator_graph')
