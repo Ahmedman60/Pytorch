@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def find_k_smallest(arr, k):
     while True:
         pivot = arr[-1]  # Choose the last element as the pivot
@@ -24,3 +27,11 @@ print(result)  # Output: [2, 1, 3] (order may vary)
 
 
 # This code isn't save to use it drop in some usage cases.
+
+# geting standard deviation and mean from arr
+
+
+def calculate_stats(arr):
+    mean = np.mean(arr)
+    std_dev = np.std(arr)
+    return mean, std_dev
