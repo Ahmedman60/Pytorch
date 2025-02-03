@@ -41,12 +41,28 @@ def crossover(parent_a, parent_b):
     return parent_a[:point] + parent_b[point:], parent_b[:point] + parent_a[point:]
 
 
-def crossover2points(parent_a, parent_b):
-    point1 = random.randint(1, len(parent_a) - 1)
-    point2 = random.randint(point1+1, len(parent_a) - 1)
+def crossover_twopoints(parent_a, parent_b):
+    point1 = random.randint(1, len(parent_a) - 2)
+    point2 = random.randint(point1 + 2, len(parent_a) - 1)
 
     child1 = parent_a[:point1] + parent_b[point1:point2]+parent_a[point2:]
     child2 = parent_b[:point1] + parent_a[point1:point2]+parent_b[point2:]
+
+    return child1, child2
+
+
+def crossover_uniform(parent_a, parent_b):
+
+    # Uniform crossover between two parents.
+    child1 = []
+    child2 = []
+    for i in range(len(parent_a)):
+        if random.random() < 0.5:
+            child1.append(parent_a[i])
+            child2.append(parent_b[i])
+        else:
+            child1.append(parent_b[i])
+            child2.append(parent_a[i])
 
     return child1, child2
 
@@ -84,7 +100,7 @@ def genetic_algorithm(pop_size, gene_size, max_generations):
             # it doesn't remove the parent from the population after cross-over which can cause it to mate again.
             parent_a = select_with_replacement(population, fitnesses)
             parent_b = select_with_replacement(population, fitnesses)
-            child_a, child_b = crossover(parent_a, parent_b)
+            child_a, child_b = crossover_uniform(parent_a, parent_b)
             new_population.extend([mutate(child_a), mutate(child_b)])
 
         population = new_population
