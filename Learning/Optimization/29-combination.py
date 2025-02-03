@@ -29,6 +29,10 @@ def intermediate_recombination(v, w, p=0.25, bounds=(-10, 10)):
             s = beta * w[i] + (1 - beta) * v[i]
 
             # Ensure t and s are within bounds
+            '''
+            Since we are using different values of and for each element, instead of rejecting recombination
+            if the elements go out of bounds, we can now just repeatedly pick a new alpha and beta .
+            '''
             if bounds[0] <= t <= bounds[1] and bounds[0] <= s <= bounds[1]:
                 new_v[i] = t
                 new_w[i] = s
