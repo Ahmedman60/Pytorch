@@ -11,19 +11,20 @@ def fitness_function(individual):
 
 
 def random_individual(size):
+    # The vector will be 0 and 1's
     return [random.randint(0, 1) for _ in range(size)]
 
 # Selection function (Tournament selection)
 
 
 def select_with_replacement(population, fitnesses):
-    ''' random.choices
+    ''' 
+Select with replacement means we can select the same individual again.
+Since selection is "with replacement," the same individual can be selected multiple times.
+random.choices
 This function is part of Python's random module.
-
 It performs a weighted random selection from the population based on the weights (fitnesses).
-
 The weights parameter assigns a probability to each individual in the population. Individuals with higher fitness values have a higher chance of being selected.
-
 The k=1 parameter specifies that only one individual should be selected.
 [0]:Since random.choices returns a list (even when k=1), the [0] is used to extract the single selected individual (vector) from the list.
 '''
@@ -31,30 +32,25 @@ The k=1 parameter specifies that only one individual should be selected.
     return random.choices(population, weights=fitnesses, k=1)[0]
 
 
-# Testing select with replacement function
-
-population = ['A', 'B', 'C', 'D']
-# Higher fitness means higher probability of selection
-fitnesses = [10, 20, 30, 40]
-
-selected_individual = select_with_replacement(population, fitnesses)
-selected_individual2 = random.choices(population, fitnesses, k=1)
-# Output: One of 'A', 'B', 'C', or 'D', with 'D' being the most like
-print(selected_individual)
-print(selected_individual2)
-
 # # Crossover function (Single-point crossover)
 
 
-# def crossover(parent_a, parent_b):
-#     point = random.randint(1, len(parent_a) - 1)
-#     return parent_a[:point] + parent_b[point:], parent_b[:point] + parent_a[point:]
+def crossover(parent_a, parent_b):
+    point = random.randint(1, len(parent_a) - 1)  # random crossover point
+    return parent_a[:point] + parent_b[point:], parent_b[:point] + parent_a[point:]
 
 # # Mutation function (Bit flip mutation)
 
 
-# def mutate(individual, mutation_rate=0.01):
-#     return [gene if random.random() > mutation_rate else 1 - gene for gene in individual]
+def mutate(individual, mutation_rate=0.01):
+    ''''
+    iterate over all individual and choice the same gene by probability of 0.99 and flip it by probability of 0.1.
+    the flip  is 1-gene
+    if  0   1-0  =1
+    if  1   1-1  =0
+    this is the same as the we did in select with replacement.
+    '''
+    return [random.choices([gene, 1 - gene], weights=[1 - mutation_rate, mutation_rate])[0] for gene in individual]
 
 # # Genetic Algorithm
 
