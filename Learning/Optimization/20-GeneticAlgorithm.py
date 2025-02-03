@@ -36,7 +36,8 @@ The k=1 parameter specifies that only one individual should be selected.
 
 
 def crossover(parent_a, parent_b):
-    point = random.randint(1, len(parent_a) - 1)  # random crossover point
+    # this is one point crossover  start from index 2 at least swap 2 like algorithm 23
+    point = random.randint(2, len(parent_a) - 1)  # random crossover point
     return parent_a[:point] + parent_b[point:], parent_b[:point] + parent_a[point:]
 
 # # Mutation function (Bit flip mutation)
@@ -50,6 +51,8 @@ def mutate(individual, mutation_rate=0.01):
     if  1   1-1  =0
     this is the same as the we did in select with replacement.
     '''
+
+    # [gen if random.random() > mutation_rate else 1-gen for gen in individual]
     return [random.choices([gene, 1 - gene], weights=[1 - mutation_rate, mutation_rate])[0] for gene in individual]
 
 # # Genetic Algorithm
@@ -66,6 +69,7 @@ def genetic_algorithm(pop_size, gene_size, max_generations):
 
         new_population = []
         for _ in range(pop_size // 2):
+            # pop_size//2  this because each iteration will create 2 children so i need to keep population fixed. by pop//2
             # This algorithm can make cross-over between same parents. or can use parent already mated with other.
             # it doesn't remove the parent from the population after cross-over which can cause it to mate again.
             parent_a = select_with_replacement(population, fitnesses)
@@ -75,7 +79,7 @@ def genetic_algorithm(pop_size, gene_size, max_generations):
 
         population = new_population
 
-    return best
+    return best, len(population)
 
 
 # Run the Genetic Algorithm
@@ -89,4 +93,20 @@ The current implementation replaces the entire population with only the newly ge
 which can reduce genetic diversity over generations.
 A better approach is to incorporate elitism or ensure that part of the new population includes top individuals 
 from the previous generation.
+
+
+Expected Behavior:
+1-Start with a population of popsize individuals.
+2-Selection: Select two parents from the current population.
+3-Crossover: Generate two children from the selected parents.
+4-Mutation: Apply mutation to each child.
+Repeat this process popsize/2 times to generate exactly popsize offspring.
+
+Replace the old population with the new one. (generational algorithm) which update the entire sample once per iteration
+---steady-state
+update the sample a few candidate solutions at a time
+
+Possible Issue:
+The current implementation iterates correctly but may not be preserving diversity well.
+It does not mix parents and offspring (pure generational replacement instead of steady-state GA).
 '''
