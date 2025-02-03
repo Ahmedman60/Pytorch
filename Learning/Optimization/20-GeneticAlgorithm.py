@@ -18,7 +18,7 @@ def random_individual(size):
 
 
 def select_with_replacement(population, fitnesses):
-    ''' 
+    '''
 Select with replacement means we can select the same individual again.
 Since selection is "with replacement," the same individual can be selected multiple times.
 random.choices
@@ -37,8 +37,18 @@ The k=1 parameter specifies that only one individual should be selected.
 
 def crossover(parent_a, parent_b):
     # this is one point crossover  start from index 2 at least swap 2 like algorithm 23
-    point = random.randint(2, len(parent_a) - 1)  # random crossover point
+    point = random.randint(1, len(parent_a) - 1)  # random crossover point
     return parent_a[:point] + parent_b[point:], parent_b[:point] + parent_a[point:]
+
+
+def crossover2points(parent_a, parent_b):
+    point1 = random.randint(1, len(parent_a) - 1)
+    point2 = random.randint(point1+1, len(parent_a) - 1)
+
+    child1 = parent_a[:point1] + parent_b[point1:point2]+parent_a[point2:]
+    child2 = parent_b[:point1] + parent_a[point1:point2]+parent_b[point2:]
+
+    return child1, child2
 
 # # Mutation function (Bit flip mutation)
 
@@ -89,9 +99,9 @@ print("Best solution found:", best_solution)
 
 
 '''
-The current implementation replaces the entire population with only the newly generated children, 
+The current implementation replaces the entire population with only the newly generated children,
 which can reduce genetic diversity over generations.
-A better approach is to incorporate elitism or ensure that part of the new population includes top individuals 
+A better approach is to incorporate elitism or ensure that part of the new population includes top individuals
 from the previous generation.
 
 
