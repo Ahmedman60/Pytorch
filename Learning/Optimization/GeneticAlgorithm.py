@@ -55,28 +55,38 @@ def mutate(individual, mutation_rate=0.01):
 # # Genetic Algorithm
 
 
-# def genetic_algorithm(pop_size, gene_size, max_generations):
-#     population = [random_individual(gene_size) for _ in range(pop_size)]
-#     best = None
+def genetic_algorithm(pop_size, gene_size, max_generations):
+    population = [random_individual(gene_size) for _ in range(pop_size)]
+    best = None
 
-#     for _ in range(max_generations):
-#         fitnesses = [fitness_function(ind) for ind in population]
-#         best_index = fitnesses.index(max(fitnesses))
-#         best = population[best_index]
+    for _ in range(max_generations):
+        fitnesses = [fitness_function(ind) for ind in population]
+        best_index = fitnesses.index(max(fitnesses))
+        best = population[best_index]
 
-#         new_population = []
-#         for _ in range(pop_size // 2):
-#             parent_a = select_with_replacement(population, fitnesses)
-#             parent_b = select_with_replacement(population, fitnesses)
-#             child_a, child_b = crossover(parent_a, parent_b)
-#             new_population.extend([mutate(child_a), mutate(child_b)])
+        new_population = []
+        for _ in range(pop_size // 2):
+            # This algorithm can make cross-over between same parents. or can use parent already mated with other.
+            # it doesn't remove the parent from the population after cross-over which can cause it to mate again.
+            parent_a = select_with_replacement(population, fitnesses)
+            parent_b = select_with_replacement(population, fitnesses)
+            child_a, child_b = crossover(parent_a, parent_b)
+            new_population.extend([mutate(child_a), mutate(child_b)])
 
-#         population = new_population
+        population = new_population
 
-#     return best
+    return best
 
 
-# # Run the Genetic Algorithm
-# best_solution = genetic_algorithm(
-#     pop_size=10, gene_size=8, max_generations=100)
-# print("Best solution found:", best_solution)
+# Run the Genetic Algorithm
+best_solution = genetic_algorithm(
+    pop_size=10, gene_size=8, max_generations=100)
+print("Best solution found:", best_solution)
+
+
+'''
+The current implementation replaces the entire population with only the newly generated children, 
+which can reduce genetic diversity over generations.
+A better approach is to incorporate elitism or ensure that part of the new population includes top individuals 
+from the previous generation.
+'''
