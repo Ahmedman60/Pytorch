@@ -52,7 +52,10 @@ def crossover_twopoints(parent_a, parent_b):
 
 
 def crossover_uniform(parent_a, parent_b):
-
+    '''
+    In theory, you could perform uniform crossover with several vectors at once to produce children
+ whicharethecombinationofallofthem
+    '''
     # Uniform crossover between two parents.
     child1 = []
     child2 = []
