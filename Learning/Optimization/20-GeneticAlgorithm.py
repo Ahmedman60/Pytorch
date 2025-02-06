@@ -101,6 +101,7 @@ def genetic_algorithm(pop_size, gene_size, max_generations):
             # pop_size//2  this because each iteration will create 2 children so i need to keep population fixed. by pop//2
             # This algorithm can make cross-over between same parents. or can use parent already mated with other.
             # it doesn't remove the parent from the population after cross-over which can cause it to mate again.
+            # i will select l times where l is the sample size.  here pop_size//2 because we have 2 parents.
             parent_a = select_with_replacement(population, fitnesses)
             parent_b = select_with_replacement(population, fitnesses)
             child_a, child_b = crossover_uniform(parent_a, parent_b)
