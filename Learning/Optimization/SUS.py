@@ -34,11 +34,12 @@ def stochastic_universal_sampling(population, fitnesses, num_selected):
     return selected
 
 
-# Example Usage
-population = ['A', 'B', 'C', 'D', 'E', 'F']
-fitnesses = [10, 20, 30, 15, 5, 20]
-num_selected = 3
+if __name__ == '__main__':
+    # Example Usage
+    population = ['A', 'B', 'C', 'D', 'E', 'F']
+    fitnesses = [10, 20, 30, 15, 5, 20]
+    num_selected = 3
 
-selected_individuals = stochastic_universal_sampling(
-    population, fitnesses, num_selected)
-print("Selected Individuals:", selected_individuals)
+    selected_individuals = stochastic_universal_sampling(
+        population, fitnesses, num_selected)
+    print("Selected Individuals:", selected_individuals)

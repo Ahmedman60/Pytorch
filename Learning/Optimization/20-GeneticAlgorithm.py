@@ -1,5 +1,5 @@
 import random
-
+from SUS import stochastic_universal_sampling
 # Define the fitness function (to be customized based on the problem)
 
 
@@ -102,6 +102,8 @@ def genetic_algorithm(pop_size, gene_size, max_generations):
             # This algorithm can make cross-over between same parents. or can use parent already mated with other.
             # it doesn't remove the parent from the population after cross-over which can cause it to mate again.
             # i will select l times where l is the sample size.  here pop_size//2 because we have 2 parents.
+            # Update after SUS... Mohammed
+            # if you going to use SUS you select will be num_select=2 and you will not change anything but the below 2 lines will be 1 line
             parent_a = select_with_replacement(population, fitnesses)
             parent_b = select_with_replacement(population, fitnesses)
             child_a, child_b = crossover_uniform(parent_a, parent_b)
