@@ -37,7 +37,7 @@ class Node:
             print(f"{indent}{self.value}")
 
 
-def generate_random_tree(depth=3):
+def generate_random_tree(depth=2):
     if depth == 0:
         return Node(random.choice(['x', str(random.randint(1, 10))]))
     op = random.choice(['+', '-', '*', '/'])
@@ -67,17 +67,53 @@ If we reach a leaf node (like 'x' or a constant), we stop -- fix error.
     return child1, child2
 
 
-parent1 = generate_random_tree(depth=2)
-parent2 = generate_random_tree(depth=2)
+'''
+The fitness function evaluates how good a given mathematical expression (tree) from what we get above --> is at solving a problem.
+'''
 
-print("Parent 1:")
-parent1.print()
-print("\nParent 2:")
-parent2.print()
 
-child1, child2 = crossover(parent1, parent2)
+def fitness(individual):
+    '''
+    Trying to approximate f(x) = x + 3
+    i will build test-cases or datasets to train the model
+    dataset will be in shape of (x,f(x))    then pass those numbers to the individual (tree you testing).
+    calculate absolute error or MSE between (i prefare MSE or RMSE-but for simplesty i use AE) the f(x) and the output from tree evaluate.
+    of course you can change the function  x+3 to anything you want.
+    '''
+    test_cases = [(x, x + 3) for x in range(-10, 10)]
+    error = sum(abs(individual.evaluate(x) - y) for x, y in test_cases)
+    '''
+    why i use - here because the problem is maxmaization problem.  
+    i will order the individual based on error i want the one with less error
+    if errors were like [50,20,98,5]   if i ordered based on max  i get 98 which is the worest  but if i add negative  i will get -5 which is the largets.
+    '''
+    return -error
 
-print("\nChild 1 (After Crossover):")
-child1.print()
-print("\nChild 2 (After Crossover):")
-child2.print()
+
+def tournament_selection(population, fitnesses, t=7):
+    """Select the best individual from a random subset of the population."""
+    tournament = random.sample(list(zip(population, fitnesses)), t)
+    return max(tournament, key=lambda x: x[1])[0]  # Return best individual
+
+
+# Testing out the Tournament selection.
+'''
+t=7 means each tournament selects 7 random individuals.
+The higher t is, the stronger the selection pressure:
+Small t (e.g., 2-3) → More exploration (diversity, weaker selection).
+Large t (e.g., 7-10) → More exploitation (selects strong individuals more often).
+Genetic Programming typically uses t=7 because it strongly favors better individuals while keeping some diversity.
+(From the book..)
+'''
+
+test_population = ["Tree1", "Tree2", "Tree3", "Tree4",
+                   "Tree5", "Tree6", "Tree7", "Tree8", "Tree9", "Tree10"]
+# tree6  is more likely to be selected because it have highest fitness (lowest error)
+test_fitnesses = [-10, -20, -15, -30, -25, -5, -40, -35, -45, -50]
+
+
+selected = [tournament_selection(
+    test_population, test_fitnesses, t=7) for _ in range(5)]
+
+# Print results
+print("Selected Individuals:", selected)
