@@ -117,3 +117,39 @@ selected = [tournament_selection(
 
 # Print results
 print("Selected Individuals:", selected)
+
+
+def genetic_programming(popsize=10, max_generations=50):
+    population = [generate_random_tree() for _ in range(popsize)]
+    best_individual = None
+
+    for generation in range(max_generations):
+        fitnesses = [fitness(ind) for ind in population]
+        # if you don't get the below you can zip the population and fintess and sort by fitness then take the first individual like we did before.
+        best_individual = max(population, key=fitness)
+
+        new_population = []
+        while len(new_population) < popsize:
+            if random.random() < 0.9:  # 90% Crossover
+                # same parent can be selected .
+                parent1 = tournament_selection(population, fitnesses)
+                parent2 = tournament_selection(population, fitnesses)
+                child1, child2 = crossover(parent1, parent2)
+                new_population.append(child1)
+                if len(new_population) < popsize:
+                    new_population.append(child2)
+            else:  # 10% Direct Copy
+                parent = tournament_selection(population, fitnesses)
+                new_population.append(parent.copy())
+
+        population = new_population
+
+    return best_individual
+
+
+# The test of the end
+best_tree = genetic_programming()
+print("\nBest Tree Structure:")
+best_tree.print()
+# x+5=8  ^^ finally.
+print("\nBest Tree Function Evaluation at x=5:", best_tree.evaluate(5))
