@@ -37,15 +37,30 @@ class Node:
             print(f"{indent}{self.value}")
 
 
-tree = Node('+', Node(3), Node('*', Node('x'), Node(2)))
-# this tree is
+def generate_random_tree(depth=3):
+    if depth == 0:
+        return Node(random.choice(['x', str(random.randint(1, 10))]))
+    op = random.choice(['+', '-', '*', '/'])
+    return Node(op, generate_random_tree(depth - 1), generate_random_tree(depth - 1))
+
+
+generate_random_tree().print()
+
+
 '''
 +
- 3  
+ - 
+   *
+     1
+     x
+   /
+    x
+    3
  *
-   x
-   2
-f=3+(x*2)
+    *
+     1
+     x
+   /
+    x
+    3
 '''
-
-print(tree.evaluate(2))  # (3 + (2 * 2)) = 7
