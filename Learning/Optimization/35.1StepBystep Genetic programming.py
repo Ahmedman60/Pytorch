@@ -106,17 +106,17 @@ Genetic Programming typically uses t=7 because it strongly favors better individ
 (From the book..)
 '''
 
-test_population = ["Tree1", "Tree2", "Tree3", "Tree4",
-                   "Tree5", "Tree6", "Tree7", "Tree8", "Tree9", "Tree10"]
-# tree6  is more likely to be selected because it have highest fitness (lowest error)
-test_fitnesses = [-10, -20, -15, -30, -25, -5, -40, -35, -45, -50]
+# test_population = ["Tree1", "Tree2", "Tree3", "Tree4",
+#                    "Tree5", "Tree6", "Tree7", "Tree8", "Tree9", "Tree10"]
+# # tree6  is more likely to be selected because it have highest fitness (lowest error)
+# test_fitnesses = [-10, -20, -15, -30, -25, -5, -40, -35, -45, -50]
 
 
-selected = [tournament_selection(
-    test_population, test_fitnesses, t=7) for _ in range(5)]
+# selected = [tournament_selection(
+#     test_population, test_fitnesses, t=7) for _ in range(5)]
 
-# Print results
-print("Selected Individuals:", selected)
+# # Print results
+# print("Selected Individuals:", selected)
 
 
 def genetic_programming(popsize=10, max_generations=50):
@@ -143,6 +143,8 @@ def genetic_programming(popsize=10, max_generations=50):
                 new_population.append(parent.copy())
 
         population = new_population
+        print(
+            f"Generation {generation + 1}: Best Fitness = {-fitness(best_individual)}")
 
     return best_individual
 
