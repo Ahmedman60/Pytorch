@@ -20,7 +20,17 @@ tfidf_matrix = vectorizer.fit_transform(documents)
 normalizer = Normalizer(copy=False)
 tfidf_matrix_normalized = normalizer.fit_transform(tfidf_matrix)
 
-# Perform K-Means clustering
+'''L2 Normalization vs. L1 Normalization
+When you use Normalizer(copy=False) in scikit-learn with default parameters, it performs L2 normalization (Euclidean normalization), not L1 normalization. This means:
+
+Each vector is scaled to have a Euclidean norm (L2 norm) of 1, not a sum (L1 norm) of 1.
+# Normalize the TF-IDF vectors
+normalizer = Normalizer(copy=False)
+tfidf_matrix_normalized = normalizer.fit_transform(tfidf_matrix)
+np.linalg.norm(tfidf_matrix_normalized.toarray(),ord=2,axis=1) #correct
+The sum of the squares of the vector's elements will equal 1, not the sum of the elements themselves.
+'''
+# Perform K-Means clustering on one feature now. which is the normalization of vectors
 num_clusters = 2
 kmeans = KMeans(n_clusters=num_clusters)
 kmeans.fit(tfidf_matrix_normalized)
