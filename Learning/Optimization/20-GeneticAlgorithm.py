@@ -1,5 +1,5 @@
 import random
-from SUS import stochastic_universal_sampling
+from SUS import stochastic_universal_samplingg
 # Define the fitness function (to be customized based on the problem)
 
 
