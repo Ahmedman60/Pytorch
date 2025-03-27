@@ -17,6 +17,7 @@ class Solution(object):
                 if nums[left] == 0:
                     # giveback the onces if 0's if 1 we don't do anything
                     k += 1
+
                 left += 1
             else:
                 max_len = max(max_len, right - left + 1)
