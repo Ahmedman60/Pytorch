@@ -11,7 +11,7 @@ class Solution(object):
             if prices[i] < min_price:
                 min_price = prices[i]
             else:
-                profit = i - prices[i]
+                profit = prices[i]-min_price
                 max_pofit = max(max_pofit, profit)
 
         return max_pofit
