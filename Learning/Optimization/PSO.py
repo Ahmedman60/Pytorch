@@ -76,9 +76,6 @@ def groupAnagrams(strs):
     return list(hash_map.values())
 
 
-print(ord('a'))  # 97
-
-
 # Absolutely! Let’s walk through the **character frequency technique** in a simple and visual way so you really get what’s happening and why it works for **grouping anagrams**.
 
 # ---
