@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from model import ConvNet
 from data_utils import get_data_loaders, get_class_names
+import datetime
 
 
 def train_epoch(model, train_loader, criterion, optimizer, device):
@@ -73,7 +74,8 @@ def plot_metrics(train_losses, train_accs, val_losses, val_accs):
     plt.legend()
 
     plt.tight_layout()
-    plt.savefig('training_metrics.png')
+    name = f"Training_metrics_{datetime.datetime.now()}.png"
+    plt.savefig(name)
     plt.close()
 
 
@@ -93,8 +95,8 @@ def main():
     # Get data loaders
     train_loader, val_loader = get_data_loaders(batch_size=batch_size)
 
-    # Initialize model
-    model = ConvNet(num_classes=10, fine_tune=False).to(device)
+    # Initialize model  (use fine_tune only if the model is pretrained in my case i built it from scratch.)
+    model = ConvNet(num_classes=10, fine_tune=True).to(device)
 
     # Loss function and optimizer
     criterion = nn.CrossEntropyLoss()
@@ -131,10 +133,29 @@ def main():
     # Plot metrics
     plot_metrics(train_losses, train_accs, val_losses, val_accs)
 
+    name = f"fashion_mnist_model_{datetime.datetime.now()}.pth"
     # Save model
-    torch.save(model.state_dict(), 'fashion_mnist_model.pth')
+    torch.save(model.state_dict(), name)
     print('\nTraining completed! Model saved as fashion_mnist_model.pth')
 
 
 if __name__ == '__main__':
     main()
+    # name = f"fashion_mnist_model_{datetime.datetime.now()}.pth"
+    # print(name)
+
+
+'''
+#20 epochs with freezing in my opinion it is mistake to do so.
+
+Train Loss: 0.2884, Train Acc: 89.35%
+Val Loss: 0.2747, Val Acc: 89.70%
+'''
+
+'''
+#normally you get higher accuracy but the model not so regualarized.
+Train Loss: 0.1200, Train Acc: 95.44%
+Val Loss: 0.2084, Val Acc: 92.98%
+'''
+
+# if i prove this method i can use to get better results but if i train for longer.
